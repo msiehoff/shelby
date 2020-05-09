@@ -33,10 +33,12 @@ func buildPracticer() *shelby.Practicer {
 	loader := shelby.SimpleChallengeLoader{
 		Challenges: []shelby.Challenge{
 			shelby.Flashcard{
-				QuestionText: "Answer to Question 1?",
+				Question: "How far away is the Sun?",
+				Answer:   "It's 8 light minutes away.",
 			},
 			shelby.Flashcard{
-				QuestionText: "Answer to Question 2?",
+				Question: "How far away is the moon in light seconds?",
+				Answer:   "It's 1 light second away.",
 			},
 		},
 	}

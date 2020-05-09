@@ -34,15 +34,19 @@ func (p *Practicer) Practice() error {
 
 		// TODO: pass io.Writer to challenge
 		nextChallenge.Present()
+		fmt.Fprint(p.Writer, "When you're ready to see the answer hit any key")
 
 		// enter anything to view answer
 		// if yes: how difficult was it? (10 if you didn't get it)
-		//scanner.Scan()
-		//scanner.Text()
-		//nextChallenge.ShowAnswer(p.Writer)
+		for scanner.Scan() {
+			scanner.Text()
+			nextChallenge.ShowAnswer(p.Writer)
+			fmt.Fprint(p.Writer, "\nHow difficult was that question? (1-10, 10 if you didn't know it)\n")
+			break
+		}
 
 		for scanner.Scan() {
-			// user answered question
+			// difficulty answer
 			msg := scanner.Text()
 
 			diff, err := strconv.Atoi(msg)

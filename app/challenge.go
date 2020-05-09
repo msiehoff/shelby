@@ -2,6 +2,7 @@ package shelby
 
 import (
 	"fmt"
+	"io"
 )
 
 // Challenge - TODO
@@ -10,7 +11,7 @@ type Challenge interface {
 	Present() error
 
 	// ShowAnswer - display the correct answer
-	//ShowAnswer(w io.Writer) error
+	ShowAnswer(w io.Writer) error
 
 	// let the user input how difficult the challenge was
 	// to inform when they'll see it next
@@ -36,11 +37,20 @@ func (s SimpleChallengeLoader) Load() ([]Challenge, error) {
 
 // Flashcard  -
 type Flashcard struct {
-	QuestionText string
+	Answer   string
+	Question string
 }
 
 // Present -
 func (f Flashcard) Present() error {
-	fmt.Printf("\n\n%s\n\n", f.QuestionText)
+	fmt.Printf("\n\n%s\n\n", f.Question)
 	return nil
+}
+
+// ShowAnswer -
+func (f Flashcard) ShowAnswer(w io.Writer) error {
+	answer := fmt.Sprintf("\nHere's the answer:\n%s\n", f.Answer)
+	_, err := fmt.Fprint(w, answer)
+
+	return err
 }
