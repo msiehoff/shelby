@@ -17,6 +17,11 @@ type Practicer struct {
 	challenges   []Challenge
 }
 
+// question header
+// questioon
+// answer
+// info
+
 // Practice -
 func (p *Practicer) Practice() error {
 	challenges, err := p.Loader.Load()
@@ -26,6 +31,7 @@ func (p *Practicer) Practice() error {
 	p.challenges = challenges
 
 	scanner := bufio.NewScanner(p.Reader)
+	challCount := 0
 	for {
 		nextChallenge, hasMoreChallenges := p.Next()
 		if !hasMoreChallenges {
@@ -33,15 +39,17 @@ func (p *Practicer) Practice() error {
 		}
 
 		// TODO: pass io.Writer to challenge
+		challCount++
+		p.questionHeader(challCount, len(challenges))
 		nextChallenge.Present()
-		fmt.Fprint(p.Writer, "When you're ready to see the answer hit any key")
+		p.postChallengeText()
 
 		// enter anything to view answer
 		// if yes: how difficult was it? (10 if you didn't get it)
 		for scanner.Scan() {
 			scanner.Text()
 			nextChallenge.ShowAnswer(p.Writer)
-			fmt.Fprint(p.Writer, "\nHow difficult was that question? (1-10, 10 if you didn't know it)\n")
+			p.askDifficulty()
 			break
 		}
 
@@ -51,14 +59,12 @@ func (p *Practicer) Practice() error {
 
 			diff, err := strconv.Atoi(msg)
 			if err != nil {
-				msg = invalidDiffMsg(msg)
-				fmt.Fprint(p.Writer, msg)
+				p.invalidDiffMsg(msg)
 				continue
 			}
 
 			if diff < 1 || diff > 10 {
-				msg = invalidDiffMsg(msg)
-				fmt.Fprint(p.Writer, msg)
+				p.invalidDiffMsg(msg)
 				continue
 			}
 
@@ -72,8 +78,32 @@ func (p *Practicer) Practice() error {
 	return nil
 }
 
-func invalidDiffMsg(msg string) string {
-	return fmt.Sprintf("\n\nYou said: %s, please enter a valid integer 1-10\n\n", msg)
+const (
+	infoColor    = "\033[1;34m%s\033[0m"
+	noticeColor  = "\033[1;36m%s\033[0m"
+	warningColor = "\033[1;33m%s\033[0m"
+	errorColor   = "\033[1;31m%s\033[0m"
+	debugColor   = "\033[0;36m%s\033[0m"
+)
+
+func (p *Practicer) questionHeader(ind, count int) {
+	qText := fmt.Sprintf("------------ %d/%d------------", ind, count)
+	fmt.Fprintf(p.Writer, infoColor, qText)
+}
+
+func (p *Practicer) postChallengeText() {
+	txt := "When you're ready to see the answer hit any key"
+	fmt.Fprintf(p.Writer, infoColor, txt)
+}
+
+func (p *Practicer) askDifficulty() {
+	txt := "How difficult was that question? (1-10)"
+	fmt.Fprintf(p.Writer, infoColor, txt)
+}
+
+func (p *Practicer) invalidDiffMsg(msg string) {
+	msg = fmt.Sprintf("You said: %s, please enter a valid integer 1-10", msg)
+	fmt.Fprintf(p.Writer, errorColor, msg)
 }
 
 // Next -
