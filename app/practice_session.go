@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"strconv"
 )
 
 // Practicer -
@@ -31,22 +32,44 @@ func (p *Practicer) Practice() error {
 			break
 		}
 
+		// TODO: pass io.Writer to challenge
 		nextChallenge.Present()
 
-		p.Writer.Write([]byte(`\n\nHow difficult was that for you on a scale of 1-10?\n`))
+		// enter anything to view answer
+		// if yes: how difficult was it? (10 if you didn't get it)
+		//scanner.Scan()
+		//scanner.Text()
+		//nextChallenge.ShowAnswer(p.Writer)
 
-		scanner.Scan()
-		msg := scanner.Text()
+		for scanner.Scan() {
+			// user answered question
+			msg := scanner.Text()
 
-		fmt.Printf("\n\nYou said: %s\n\n", msg)
+			diff, err := strconv.Atoi(msg)
+			if err != nil {
+				msg = invalidDiffMsg(msg)
+				fmt.Fprint(p.Writer, msg)
+				continue
+			}
 
-		// convert to int difficulty
-		// send feedback to question
+			if diff < 1 || diff > 10 {
+				msg = invalidDiffMsg(msg)
+				fmt.Fprint(p.Writer, msg)
+				continue
+			}
+
+			// send feedback to question
+			break
+		}
 	}
 
 	fmt.Printf("\nGreat Job, you're done!!!\n")
 
 	return nil
+}
+
+func invalidDiffMsg(msg string) string {
+	return fmt.Sprintf("\n\nYou said: %s, please enter a valid integer 1-10\n\n", msg)
 }
 
 // Next -

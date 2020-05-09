@@ -1,11 +1,16 @@
 package shelby
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // Challenge - TODO
 type Challenge interface {
 	// present the challenge to the user
 	Present() error
+
+	// ShowAnswer - display the correct answer
+	//ShowAnswer(w io.Writer) error
 
 	// let the user input how difficult the challenge was
 	// to inform when they'll see it next

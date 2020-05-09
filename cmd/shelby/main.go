@@ -44,6 +44,6 @@ func buildPracticer() *shelby.Practicer {
 	return &shelby.Practicer{
 		Loader: loader,
 		Reader: bufio.NewReader(os.Stdin),
-		Writer: bufio.NewWriter(os.Stdout),
+		Writer: os.Stdout,
 	}
 }
