@@ -7,7 +7,8 @@ import (
 	"strconv"
 )
 
-// Practicer -
+// Practicer - a struct which conducts a spaced
+// repetition practice session
 type Practicer struct {
 	Loader ChallengeLoader
 	Reader io.Reader
@@ -17,12 +18,11 @@ type Practicer struct {
 	challenges   []Challenge
 }
 
-// question header
-// questioon
-// answer
-// info
-
-// Practice -
+// Practice - start a practice session with a provided
+// set of challenges.
+// Prompt the user to complete challenges and input
+// how difficult each challenge was. This will determine
+// when the user will see each challenge next
 func (p *Practicer) Practice() error {
 	challenges, err := p.Loader.Load()
 	if err != nil {
@@ -38,14 +38,12 @@ func (p *Practicer) Practice() error {
 			break
 		}
 
-		// TODO: pass io.Writer to challenge
 		challCount++
 		p.questionHeader(challCount, len(challenges))
 		nextChallenge.Present(p.Writer)
 		p.postChallengeText()
 
-		// enter anything to view answer
-		// if yes: how difficult was it? (10 if you didn't get it)
+		// wait for user to ask for the answer
 		for scanner.Scan() {
 			scanner.Text()
 			nextChallenge.ShowAnswer(p.Writer)
@@ -108,7 +106,7 @@ func (p *Practicer) invalidDiffMsg(msg string) {
 	fmt.Fprintf(p.Writer, errorColor, msg)
 }
 
-// Next -
+// Next - return the next challenge, if any remain
 func (p *Practicer) Next() (Challenge, bool) {
 	if !p.hasMoreChallenges() {
 		return nil, false
