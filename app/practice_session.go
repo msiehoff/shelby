@@ -87,8 +87,10 @@ const (
 )
 
 func (p *Practicer) questionHeader(ind, count int) {
-	qText := fmt.Sprintf("------------ %d/%d------------", ind, count)
+	fmt.Fprintf(p.Writer, infoColor, "\n===================================")
+	qText := fmt.Sprintf("\n=============== %d/%d ===============", ind, count)
 	fmt.Fprintf(p.Writer, infoColor, qText)
+	fmt.Fprintf(p.Writer, infoColor, "\n===================================")
 }
 
 func (p *Practicer) postChallengeText() {

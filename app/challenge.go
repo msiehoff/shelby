@@ -49,8 +49,9 @@ func (f Flashcard) Present() error {
 
 // ShowAnswer -
 func (f Flashcard) ShowAnswer(w io.Writer) error {
-	answer := fmt.Sprintf("\nHere's the answer:\n%s\n", f.Answer)
-	_, err := fmt.Fprint(w, answer)
+	fmt.Fprintf(w, noticeColor, "\n------- Answer -----------------------------")
+	_, err := fmt.Fprintf(w, "\n\n%s\n\n", f.Answer)
+	fmt.Fprintf(w, noticeColor, "--------------------------------------------\n\n")
 
 	return err
 }
