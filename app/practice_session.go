@@ -41,7 +41,7 @@ func (p *Practicer) Practice() error {
 		// TODO: pass io.Writer to challenge
 		challCount++
 		p.questionHeader(challCount, len(challenges))
-		nextChallenge.Present()
+		nextChallenge.Present(p.Writer)
 		p.postChallengeText()
 
 		// enter anything to view answer
@@ -79,11 +79,11 @@ func (p *Practicer) Practice() error {
 }
 
 const (
-	infoColor    = "\033[1;34m%s\033[0m"
-	noticeColor  = "\033[1;36m%s\033[0m"
-	warningColor = "\033[1;33m%s\033[0m"
-	errorColor   = "\033[1;31m%s\033[0m"
-	debugColor   = "\033[0;36m%s\033[0m"
+	infoColor   = "\033[1;34m%s\033[0m"
+	noticeColor = "\033[1;36m%s\033[0m"
+	promptColor = "\033[1;33m%s\033[0m"
+	errorColor  = "\033[1;31m%s\033[0m"
+	debugColor  = "\033[0;36m%s\033[0m"
 )
 
 func (p *Practicer) questionHeader(ind, count int) {
@@ -99,8 +99,8 @@ func (p *Practicer) postChallengeText() {
 }
 
 func (p *Practicer) askDifficulty() {
-	txt := "How difficult was that question? (1-10)"
-	fmt.Fprintf(p.Writer, infoColor, txt)
+	txt := "How difficult was that question? (1-10)\n"
+	fmt.Fprintf(p.Writer, promptColor, txt)
 }
 
 func (p *Practicer) invalidDiffMsg(msg string) {

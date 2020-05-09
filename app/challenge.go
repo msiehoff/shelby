@@ -8,7 +8,7 @@ import (
 // Challenge - TODO
 type Challenge interface {
 	// present the challenge to the user
-	Present() error
+	Present(w io.Writer) error
 
 	// ShowAnswer - display the correct answer
 	ShowAnswer(w io.Writer) error
@@ -42,8 +42,9 @@ type Flashcard struct {
 }
 
 // Present -
-func (f Flashcard) Present() error {
-	fmt.Printf("\n\n%s\n\n", f.Question)
+func (f Flashcard) Present(w io.Writer) error {
+	qText := fmt.Sprintf("\n\n%s\n\n", f.Question)
+	fmt.Fprintf(w, promptColor, qText)
 	return nil
 }
 
